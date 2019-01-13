@@ -93,6 +93,8 @@ func (s *Statement) Reconcile() (float64, bool) {
 
 var findStatements = regexp.MustCompile(`(?m)^([0-9]{0,2})/([0-9]{0,2}) (.*) ([0-9\-\.,]+)`)
 
+var findEnd = regexp.MustCompile(`Amount Rewards`)
+
 var (
 	findPreviousBalance = regexp.MustCompile(`(?m)^Previous Balance \$([0-9\-\.,]+)`)
 	findNewBalance      = regexp.MustCompile(`(?m)^New Balance \$([0-9\-\.,]+)`)
@@ -117,7 +119,11 @@ func main() {
 		yearBytes = yb[1]
 	}
 
-	sts := findStatements.FindAllSubmatch(body, -1)
+        end := len(body)
+	if loc := findEnd.FindIndex(body); loc != nil {
+            end = loc[0]
+        }
+	sts := findStatements.FindAllSubmatch(body[0:end], -1)
 	log.Printf("Found %d matches\n", len(sts))
 	for i, st := range sts {
 		if len(st) < 4 {
