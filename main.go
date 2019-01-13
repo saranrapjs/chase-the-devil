@@ -119,10 +119,10 @@ func main() {
 		yearBytes = yb[1]
 	}
 
-        end := len(body)
+	end := len(body)
 	if loc := findEnd.FindIndex(body); loc != nil {
 		end = loc[0]
-        }
+	}
 	sts := findStatements.FindAllSubmatch(body[0:end], -1)
 	log.Printf("Found %d matches\n", len(sts))
 	for i, st := range sts {
